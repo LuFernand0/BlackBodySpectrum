@@ -33,16 +33,16 @@ Calcula a intensidade da radiação emitida em diferentes comprimentos de onda (
 ### **Lei do Deslocamento de Wien**
 Define o comprimento de onda de máxima emissão:
 
-\[
+$$
 \lambda_{\text{max}} \propto \frac{1}{T}
-\]
+$$
 
 ### **Lei de Stefan–Boltzmann**
 A potência total irradiada por unidade de área é dada por:
 
-\[
+$$
 W \propto T^4
-\]
+$$
 
 ---
 
@@ -79,3 +79,15 @@ source venv/bin/activate
 
 # Windows
 venv\Scripts\activate
+```
+
+### **2. Instalar Dependências**
+
+```bash
+pip install -r requirements.txt
+```
+
+### **3. Executar**
+```bash
+python Black_body.py
+```
