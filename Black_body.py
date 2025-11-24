@@ -1,6 +1,5 @@
 import numpy as np                                               # Para operações com vetores e matrizes
 import matplotlib.pyplot as plt                                  # Para plotar gráficos
-from matplotlib.pyplot import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg  # Para integrar o matplotlib com Tkinter
 import scipy.integrate as integrate                              # Para resolver integrais
 import scipy.optimize as optimize                                # Para encontrar mínimos, máximos, raízes e ajustar curvas
