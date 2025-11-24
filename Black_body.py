@@ -1,10 +1,12 @@
-import numpy as np                          # Para operações com vetores e matrizes
-import matplotlib.pyplot as plt             # Para plotar gráficos
+import numpy as np                                               # Para operações com vetores e matrizes
+import matplotlib.pyplot as plt                                  # Para plotar gráficos
+from matplotlib.pyplot import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg  # Para integrar o matplotlib com Tkinter
-import scipy.integrate as integrate         # Para resolver integrais
-import scipy.optimize as optimize           # Para encontrar mínimos, máximos, raízes e ajustar curvas
-import tkinter as tk                        # Para criar interfaces gráficas com Tkinter
-from tkinter import ttk                     # Para importar widgets de Tkinter (como o slider)
+import scipy.integrate as integrate                              # Para resolver integrais
+import scipy.optimize as optimize                                # Para encontrar mínimos, máximos, raízes e ajustar curvas
+import tkinter as tk                                             # Para criar interfaces gráficas com Tkinter
+from tkinter import ttk                                          # Para importar widgets de Tkinter (como o slider)
+from pathlib import Path
 
 #Parâmetros
 h = 6.62607015e-34  #Constate de Planck [J*s]
@@ -236,6 +238,8 @@ def update_plot(T: float) -> None:
     # Plotar a curva de intensidades no eixo
     ax.plot(wavelength_nm, intensities, color='black', linewidth=2)
     
+    ax.set_title("Intensidade vs Comprimento de Onda", size=20, pad=15)
+    
     # Configurar os limites do gráfico
     ax.set_xlim(wavelength_nm[0], wavelength_nm[-1])  # Limites do eixo X (em nm)
     
@@ -253,6 +257,32 @@ def update_plot(T: float) -> None:
     
     # Atualizar o canvas
     canvas.draw()
+    
+    
+def save_graph() -> None:
+    # --- Configurações de Salvamento ---
+    # 1. Defina o diretório onde os gráficos serão salvos
+    save_directory = Path("Graficos") 
+
+    # 2. Garanta que o diretório exista (crie se não existir)
+    save_directory.mkdir(parents=True, exist_ok=True)
+
+    # 3. Encontre o próximo número de gráfico disponível
+    grafico_numero = 1
+    while True:
+        # Crie o nome do arquivo para o número atual
+        file_name = f"grafico{grafico_numero}.png"
+        full_path = save_directory / file_name
+        
+        # Se o arquivo não existir, este é o número que usaremos.
+        if not full_path.exists():
+            break
+        
+        # Se o arquivo existir, incremente o número e tente novamente.
+        grafico_numero += 1
+
+    # 6. Salve o gráfico no caminho completo (que agora é garantidamente único)
+    plt.savefig(full_path)
 
 # Função para criar a interface com Tkinter
 def create_gui() -> None:
@@ -263,22 +293,43 @@ def create_gui() -> None:
     root = tk.Tk()
     root.title("Espectro de radiação de corpo negro")
     
-    root.columnconfigure(0, weight=1) 
+    style = ttk.Style()
+    # Configuração Padrão do Estilo
+    style.configure(
+        "Save.TButton", 
+        font=('Arial', 10, 'bold'), foreground='#000000', background='#A8E6CF', padding=5, relief="raised", bordercolor='#A8E6CF', lightcolor='#A8E6CF', darkcolor='#A8E6CF' 
+    )
+
+    # Mapeamento de Estado (Hover/Ativo)
+    # Define o que acontece quando o mouse passa por cima ('active')
+    style.map(
+        "Save.TButton",
+        background=[('active', '#7CC4A8')],  # Fundo escurece no hover
+        foreground=[('active', '#000000')]   # Texto permanece preto no hover
+    )
+    
+    root.columnconfigure(0, weight=1)
+    
     
     # Criar o slider para ajustar a temperatura
     slider = ttk.Scale(root, from_=200, to=11000, orient='horizontal', command=lambda val: update_plot(float(val)), length=700)
     slider.set(5800)  # Valor inicial de temperatura
     slider.grid(row=1, column=0, padx=15, pady=(0, 15), sticky='ew')
-
+    
     # Criar o gráfico com Matplotlib
     global fig, ax, canvas
-    fig, ax = plt.subplots(figsize=(10, 6), facecolor = 'lightgray')
+    fig, ax = plt.subplots(figsize=(10, 6), facecolor = 'lightgray')    
     
     # Colocar o gráfico no canvas do Tkinter
     canvas = FigureCanvasTkAgg(fig, master=root)
-    canvas.get_tk_widget().grid(row=0, column=0, padx=10, pady=(0, 10), sticky='nsew')
+    grafico = canvas.get_tk_widget()
+    grafico.grid(row=0, column=0, padx=10, pady=(0, 10), sticky='nsew')
     
-    root.rowconfigure(0, weight=1)
+    button = ttk.Button(grafico, text="Salvar Gráfico", command=lambda: save_graph(), style="Save.TButton")
+    button.place(relx=1.0, rely=0.0, anchor="ne", x=-15, y=15)
+
+
+    root.rowconfigure(0, weight=1) 
 
     # Inicializar o gráfico com a temperatura inicial
     update_plot(5800)
