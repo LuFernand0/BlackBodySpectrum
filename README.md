@@ -27,7 +27,8 @@ A aplicação possui uma **interface gráfica** (tkinter) que exibe o gráfico d
 
 A simulação representa três leis fundamentais da física da radiação térmica:
 
-![Espectro]{Graficos\grafico1.png}
+![Espectro]{/Graficos\grafico1.png}
+
 
 ### **Lei de Planck**
 Calcula a intensidade da radiação emitida em diferentes comprimentos de onda (λ) para uma dada temperatura (T).
