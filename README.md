@@ -27,7 +27,7 @@ A aplicação possui uma **interface gráfica** (tkinter) que exibe o gráfico d
 
 A simulação representa três leis fundamentais da física da radiação térmica:
 
-![Espectro](https://github.com/LuFernand0/BlackBodySpectrum/blob/main/grafico1.png?raw=true)
+![Espectro](grafico1.png)
 
 
 ### **Lei de Planck**
